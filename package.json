@@ -1,0 +1,19 @@
+{
+    "name": "proyecto",
+    "version": "1.0.0",
+    "description": "API en Node.js",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "initBd": "docker-compose up -d",
+        "stopBd": "docker-compose down"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.21.2",
+        "dotenv": "^16.4.7",
+        "pg": "^8.14.1"
+    }
+}
