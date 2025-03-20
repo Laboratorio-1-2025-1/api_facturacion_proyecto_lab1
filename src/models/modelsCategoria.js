@@ -18,6 +18,7 @@ export const selectAllCategorias = async () => {
     let sql = 'SELECT * FROM categoria';
     try {
         const result = await connect.query(sql);
+        console.log('Resultados encontrados');
         return result.rows;
     } catch (error) {
         console.error(error.message);
@@ -32,6 +33,7 @@ export const selectCategoriaById = async (id) => {
     let sql = 'SELECT * FROM categoria WHERE id = $1';
     try {
         const result = await connect.query(sql, [id]);
+        console.log('Resultados encontrados');
         return result.rows;
     } catch (error) {
         console.error(error.message);
@@ -46,6 +48,7 @@ export const insertCategoria = async (c) => {
     let sql = 'INSERT INTO categoria (descripcion, tipo, estado) VALUES ($1, $2, $3) RETURNING *';
     try {
         const result = await connect.query(sql, [c.descripcion, c.tipo, '1']);
+        console.log('Categoria creada');
         return result.rows;
     } catch (error) {
         console.error(error.message);
@@ -72,6 +75,7 @@ export const updateCategoria = async (c) => {
     let sql = 'UPDATE categoria SET descripcion = $1, tipo = $2, estado = $3 WHERE id = $4 RETURNING *';
     try {
         const result = await connect.query(sql, [c.descripcion, c.tipo, c.estado, c.id]);
+        console.log('Categoria actualizada');
         return result.rows;
     } catch (error) {
         console.error(error.message);
@@ -93,6 +97,7 @@ export const deleteCategoria = async (id) => {
     let sql = 'UPDATE categoria SET estado = $1 WHERE id = $2 RETURNING *';
     try {
         const result = await connect.query(sql, ['2', id]);
+        console.log('Categoria eliminada');
         return result.rows;
     } catch (error) {
         console.error(error.message);

@@ -10,6 +10,7 @@ app.use(express.json());
 const routes = require('./routes/allRoutes.js');
 
 app.use('/api/categorias', routes.categorias);
+app.use('/api/ajusteprecio', routes.ajusteprecio);
 
 app.get('/', async (req, res) => {
     try {

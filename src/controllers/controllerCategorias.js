@@ -1,4 +1,4 @@
-const sql = require('../sql/queriesCategoria');
+const sql = require('../models/modelsCategoria');
 
 // GET /api/categorias
 exports.getAllCategorias = async (req, res) => {
@@ -7,6 +7,7 @@ exports.getAllCategorias = async (req, res) => {
         res.json(result);
     } catch (error) {
         console.error(error.message);
+        res.status(500).json({ msg: 'Error al realizar la operacion' });
     }
 }
 
@@ -19,6 +20,7 @@ exports.getCategoriaById = async (req, res) => {
         res.json(result[0]);
     } catch (error) {
         console.error(error.message);
+        res.status(500).json({ msg: 'Error al realizar la operacion' });
     }
 }
 
@@ -35,6 +37,7 @@ exports.createCategoria = async (req, res) => {
         res.json(result[0]);
     } catch (error) {
         console.error(error.message);
+        res.status(500).json({ msg: 'Error al realizar la operacion' });
     }
 }
 
@@ -46,9 +49,10 @@ exports.updateCategoria = async (req, res) => {
 
     try {
         const result = await sql.updateCategoria(categoria);
-        res.json(result);
+        res.json(result[0]);
     } catch (error) {
         console.error(error.message);
+        res.status(500).json({ msg: 'Error al realizar la operacion' });
     }
 }
 
@@ -57,8 +61,9 @@ exports.deleteCategoria = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     try {
         const result = await sql.deleteCategoria(id);
-        res.json(result);
+        res.json(result[0]);
     } catch (error) {
         console.error(error.message);
+        res.status(500).json({ msg: 'Error al realizar la operacion' });
     }
 }
