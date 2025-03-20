@@ -11,6 +11,7 @@ const routes = require('./routes/allRoutes.js');
 
 app.use('/api/categorias', routes.categorias);
 app.use('/api/ajusteprecio', routes.ajusteprecio);
+app.use('/api/items', routes.items);
 
 app.get('/', async (req, res) => {
     try {
