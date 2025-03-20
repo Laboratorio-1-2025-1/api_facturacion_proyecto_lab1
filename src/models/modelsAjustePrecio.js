@@ -6,7 +6,7 @@
  ajustePrecio{
     id
     descripcion
-    aplicableA (1: producto, 2: servicio)
+    aplicable_a (1: producto, 2: servicio)
     tipo (1: impuesto, 2: descuento)
     valor
     estado (1: activo, 2: inactivo)
@@ -45,12 +45,12 @@ export const selectAjustePrecioByTipo = async (tipo) => {
       }
    }
 
-//requiere un aplicableA
-export const selectAjustePrecioByAplicableA = async (aplicableA) => {
+//requiere un aplicable_a
+export const selectAjustePrecioByaplicable_a = async (aplicable_a) => {
       const connect = await db.connect();
-      let sql = 'SELECT * FROM ajuste_precio WHERE aplicableA = $1';
+      let sql = 'SELECT * FROM ajuste_precio WHERE aplicable_a = $1';
       try {
-         const result = await connect.query(sql, [aplicableA]);
+         const result = await connect.query(sql, [aplicable_a]);
          console.log('Resultados encontrados');
          return result.rows;
       } catch (error) {
@@ -60,12 +60,12 @@ export const selectAjustePrecioByAplicableA = async (aplicableA) => {
       }
    }
 
-//requiere un tipo de ajuste y un aplicableA
-export const selectAjustePrecioByTipoAplicableA = async (tipo, aplicableA) => {
+//requiere un tipo de ajuste y un aplicable_a
+export const selectAjustePrecioByTipoaplicable_a = async (tipo, aplicable_a) => {
       const connect = await db.connect();
-      let sql = 'SELECT * FROM ajuste_precio WHERE tipo = $1 AND aplicableA = $2';
+      let sql = 'SELECT * FROM ajuste_precio WHERE tipo = $1 AND aplicable_a = $2';
       try {
-         const result = await connect.query(sql, [tipo, aplicableA]);
+         const result = await connect.query(sql, [tipo, aplicable_a]);
          console.log('Resultados encontrados');
          return result.rows;
       } catch (error) {
@@ -90,12 +90,12 @@ export const selectAjustePrecioById = async (id) => {
       }
    }
 
-// requiere un objeto a:{descripcion, aplicableA, tipo, valor}
+// requiere un objeto a:{descripcion, aplicable_a, tipo, valor}
 export const insertAjustePrecio = async (a) => {
       const connect = await db.connect();
-      let sql = 'INSERT INTO ajuste_precio (descripcion, aplicableA, tipo, valor, estado) VALUES ($1, $2, $3, $4, $5) RETURNING *';
+      let sql = 'INSERT INTO ajuste_precio (descripcion, aplicable_a, tipo, valor, estado) VALUES ($1, $2, $3, $4, $5) RETURNING *';
       try {
-         const result = await connect.query(sql, [a.descripcion, a.aplicableA, a.tipo, a.valor, '1']);
+         const result = await connect.query(sql, [a.descripcion, a.aplicable_a, a.tipo, a.valor, '1']);
          console.log('Ajuste de precio creado');
          return result.rows;
       } catch (error) {
@@ -105,7 +105,7 @@ export const insertAjustePrecio = async (a) => {
       }
    }
 
-// requiere un objeto a:{id, descripcion, aplicableA, tipo, valor, estado}
+// requiere un objeto a:{id, descripcion, aplicable_a, tipo, valor, estado}
 export const updateAjustePrecio = async (a) => {
       // se verifica que el ajuste exista
       const ajusteAux = await selectAjustePrecioById(a.id);
@@ -114,16 +114,16 @@ export const updateAjustePrecio = async (a) => {
          return;
       } else {
          a.descripcion = a.descripcion || ajusteAux[0].descripcion;
-         a.aplicableA = a.aplicableA || ajusteAux[0].aplicableA;
+         a.aplicable_a = a.aplicable_a || ajusteAux[0].aplicable_a;
          a.tipo = a.tipo || ajusteAux[0].tipo;
          a.valor = a.valor || ajusteAux[0].valor;
          a.estado = a.estado || ajusteAux[0].estado;
       }
 
       const connect = await db.connect();
-      let sql = 'UPDATE ajuste_precio SET descripcion = $1, aplicableA = $2, tipo = $3, valor = $4, estado = $5 WHERE id = $6 RETURNING *';
+      let sql = 'UPDATE ajuste_precio SET descripcion = $1, aplicable_a = $2, tipo = $3, valor = $4, estado = $5 WHERE id = $6 RETURNING *';
       try {
-         const result = await connect.query(sql, [a.descripcion, a.aplicableA, a.tipo, a.valor, a.estado, a.id]);
+         const result = await connect.query(sql, [a.descripcion, a.aplicable_a, a.tipo, a.valor, a.estado, a.id]);
          console.log('Ajuste de precio actualizado');
          return result.rows;
       } catch (error) {
