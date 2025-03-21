@@ -99,7 +99,11 @@ exports.updateItem = async (req, res) => {
     }
 }
 
-// DELETE /api/items/id
+/**
+ * DELETE /api/items/id
+ * @param {{id:number}} req
+ * @returns El item eliminado
+ */
 exports.deleteItem = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     try {

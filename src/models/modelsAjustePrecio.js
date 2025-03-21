@@ -16,6 +16,10 @@
 
 import db from '../utils/db.js';
 
+/**
+ * Busca todos los ajustes de precio
+ * @returns Todos los ajustes de precio
+ * */
 export const selectAllAjustePrecio = async () => {
       const connect = await db.connect();
       let sql = 'SELECT * FROM ajuste_precio';
@@ -30,7 +34,11 @@ export const selectAllAjustePrecio = async () => {
       }
    }
 
-//requiere un tipo de ajuste
+/**
+ * Busca un ajuste de precio por su tipo
+ * @param {number} tipo
+ * @returns ajuste encontrado
+ * */
 export const selectAjustePrecioByTipo = async (tipo) => {
       const connect = await db.connect();
       let sql = 'SELECT * FROM ajuste_precio WHERE tipo = $1';
@@ -45,7 +53,12 @@ export const selectAjustePrecioByTipo = async (tipo) => {
       }
    }
 
-//requiere un aplicable_a
+/**
+ * Busca un ajuste de precio por su aplicable_a
+ * @param {number} aplicable_a
+ * @returns ajuste encontrado
+ */
+
 export const selectAjustePrecioByaplicable_a = async (aplicable_a) => {
       const connect = await db.connect();
       let sql = 'SELECT * FROM ajuste_precio WHERE aplicable_a = $1';
@@ -60,7 +73,13 @@ export const selectAjustePrecioByaplicable_a = async (aplicable_a) => {
       }
    }
 
-//requiere un tipo de ajuste y un aplicable_a
+/**
+ * Busca un ajuste de precio por su tipo y aplicable_a
+ * @param {number} tipo
+ * @param {number} aplicable_a
+ * @returns ajuste encontrado
+ */
+
 export const selectAjustePrecioByTipoaplicable_a = async (tipo, aplicable_a) => {
       const connect = await db.connect();
       let sql = 'SELECT * FROM ajuste_precio WHERE tipo = $1 AND aplicable_a = $2';
@@ -75,7 +94,12 @@ export const selectAjustePrecioByTipoaplicable_a = async (tipo, aplicable_a) => 
       }
    }
 
-// requiere un id de ajuste
+/**
+ * Busca un ajuste de precio por su id
+ * @param {number} id
+ * @returns ajuste encontrado
+ */
+
 export const selectAjustePrecioById = async (id) => {
       const connect = await db.connect();
       let sql = 'SELECT * FROM ajuste_precio WHERE id = $1';
@@ -90,7 +114,14 @@ export const selectAjustePrecioById = async (id) => {
       }
    }
 
-// requiere un objeto a:{descripcion, aplicable_a, tipo, valor}
+/**
+ * Crea un nuevo ajuste de precio
+ * @param {{descripcion:string,
+ *          aplicable_a:number,
+ *          tipo:number,
+ *          valor:number}} a
+ * @returns ajuste creado
+ */
 export const insertAjustePrecio = async (a) => {
       const connect = await db.connect();
       let sql = 'INSERT INTO ajuste_precio (descripcion, aplicable_a, tipo, valor, estado) VALUES ($1, $2, $3, $4, $5) RETURNING *';
@@ -105,7 +136,16 @@ export const insertAjustePrecio = async (a) => {
       }
    }
 
-// requiere un objeto a:{id, descripcion, aplicable_a, tipo, valor, estado}
+/**
+ * Actualiza un ajuste de precio
+ * @param {{id:number, 
+ *          descripcion:string, 
+ *          aplicable_a:number,
+ *          tipo:number, 
+ *          valor:number, 
+ *          estado:number}} a
+ * @returns ajuste actualizado
+ */
 export const updateAjustePrecio = async (a) => {
       // se verifica que el ajuste exista
       const ajusteAux = await selectAjustePrecioById(a.id);
@@ -133,13 +173,17 @@ export const updateAjustePrecio = async (a) => {
       }
    }
 
-// requiere un id de ajuste
+/**
+ * Elimina un ajuste de precio
+ * @param {number} id
+ * @returns ajuste eliminado
+ */
 export const deleteAjustePrecio = async (id) => {
       // se verifica que el ajuste exista
       const ajusteAux = await selectAjustePrecioById(id);
       if(ajusteAux.length === 0){
          console.error('El ajuste de precio no existe');
-         return null;
+         return
       }
       const connect = await db.connect();
       let sql = 'UPDATE ajuste_precio SET estado = $1 WHERE id = $2 RETURNING *';
