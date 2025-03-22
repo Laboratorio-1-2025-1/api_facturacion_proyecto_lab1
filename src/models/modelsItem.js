@@ -184,14 +184,13 @@ export const selectItemByNombreCategoriaTipo = async (nombre, categoria, tipo) =
  * @param {{nombre:string,
  * descripcion:string,
  * categoria_id:number,
- * tipo:number}} i
+ * tipo:string}} i
  * @returns El item creado
  */
 export const insertItem = async (i) => {
     const categoria = await selectCategoriaById(i.categoria_id);
     if(categoria.length === 0){
-        console.error('Categoria no encontrada');
-        return;
+        throw new Error('Categoria no encontrada');
     }
     const connect = await db.connect();
     let sql = 'INSERT INTO item (nombre, descripcion, categoria_id, tipo, estado) VALUES ($1, $2, $3, $4, $5) RETURNING *';
@@ -200,7 +199,7 @@ export const insertItem = async (i) => {
         console.log('Item creado');
         return result.rows;
     } catch (error) {
-        console.error(error.message);
+        throw new Error(`Error al crear el item: ${error.message}`);
     } finally {
         if(connect){ connect.release(); }
     }

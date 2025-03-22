@@ -197,3 +197,4 @@ export const deleteAjustePrecio = async (id) => {
          if(connect){ connect.release(); }
       }
    }
+

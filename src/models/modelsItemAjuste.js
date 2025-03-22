@@ -180,3 +180,25 @@ export const deleteItemAjuste = async (id) => {
         if(connect){ connect.release(); }
     }
 }
+
+/**
+ * Busca por Id y devuelve el nombre del ajuste y el valor
+ * @param {number} id
+ * @returns Valores del ajuste encontrado
+ */
+export const selectItemAjuste_byId_joinAjustePrecio = async (id) => {
+    const connect = await db.connect();
+    let sql = 'SELECT aP.descripcion, aP.valor '+ 
+        'FROM ajuste_precio aP '+
+        'INNER JOIN item_ajuste iA ON iA.ajuste_precio_id = aP.id '+
+        'WHERE iA.id  = $1';
+    try {
+        const result = await connect.query(sql, [id]);
+        console.log('Resultados encontrados');
+        return result.rows;
+    } catch (error) {
+        console.error(error.message);
+    } finally {
+        if(connect){ connect.release(); }
+    }
+}

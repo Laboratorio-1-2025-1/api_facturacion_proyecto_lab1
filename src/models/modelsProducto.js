@@ -22,7 +22,8 @@ import { selectItemById } from './modelsItem.js';
  */
 export const selectAllProductos = async () => {
     const connect = await db.connect();
-    let sql = 'SELECT * FROM productos';
+    let sql = 'SELECT p.id, p.item_id, i.nombre, i.descripcion, p.stock, p.precio, p.coste '
+    + ' FROM productos p INNER JOIN item i ON p.item_id = i.id';
     try {
         const result = await connect.query(sql);
         console.log('Resultados encontrados');
@@ -166,6 +167,50 @@ export const deleteProducto = async (id) => {
     try {
         const result = await connect.query(sql, ['2', id]);
         console.log('Producto eliminado');
+        return result.rows;
+    } catch (error) {
+        console.error(error.message);
+    } finally {
+        if(connect){ connect.release(); }
+    }
+}
+
+/**
+ * Optiene todos los productos, con su item correspondiente
+ * @returns Todos los productos eliminados
+ */
+
+export const selectAllProductos_joinItems = async () => {
+    const connect = await db.connect();
+    let sql = 'SELECT p.id, i.nombre, i.descripcion, p.stock, p.precio, p.coste '
+    + ' FROM productos p INNER JOIN item i ON p.item_id = i.id';
+    try {
+        const result = await connect.query(sql);
+        console.log('Resultados encontrados');
+        return result.rows;
+    } catch (error) {
+        console.error(error.message);
+    } finally {
+        if(connect){ connect.release(); }
+    }
+}
+
+/**
+ * Optiene un producto por su id, con su item correspondiente
+ * @param {number} id
+ * @returns Todos los productos eliminados
+ */
+
+export const selectProducto_ById_joinItems = async (id) => {
+    const connect = await db.connect();
+    let sql = `SELECT p.id, i.nombre, i.descripcion, p.stock, p.precio, p.coste 
+    FROM productos p 
+    INNER JOIN item i 
+    ON p.item_id = i.id 
+    WHERE p.id = $1`;
+    try {
+        const result = await connect.query(sql, [id]);
+        console.log('Resultados encontrados');
         return result.rows;
     } catch (error) {
         console.error(error.message);
