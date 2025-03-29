@@ -203,11 +203,20 @@ export const selectAllProductos_joinItems = async () => {
 
 export const selectProducto_ById_joinItems = async (id) => {
     const connect = await db.connect();
-    let sql = `SELECT p.id, i.nombre, i.descripcion, p.stock, p.precio, p.coste 
-    FROM productos p 
-    INNER JOIN item i 
-    ON p.item_id = i.id 
-    WHERE p.id = $1`;
+
+    let sql = 'SELECT ' +
+    'p.producto_id, p.item_id, '+
+    'p.item_nombre as nombre, '+
+    'p.item_descripcion as descripcion, '+
+    'p.categoria_id as categoria_id, '+
+    'p.categoria_descripcion as categoria_descripcion, '+
+    'p.producto_stock as stock, '+
+    'p.producto_precio as precio, '+
+    'p.producto_coste as coste  '+
+
+    'FROM vista_productos_con_categoria p ' +
+    'WHERE p.producto_id = $1';
+
     try {
         const result = await connect.query(sql, [id]);
         console.log('Resultados encontrados');

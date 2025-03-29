@@ -75,20 +75,17 @@ exports.deleteCategoria = async (req, res) => {
  */
 exports.validateCategoria = async (cat) => {
     cat = parseInt(cat, 10);
-    let e = {cat: {}}
+    let e = {}
 
     // Validamos formato de categoria_id
     if (isNaN(cat) || cat <= 0) {
-        e.cat.msg1 = 'Categoria Invalida'
-    }
-
-    // Validamos que la categoria exista
-    if (await sql.selectCategoriaById(cat).length === 0) {
-        e.cat.msg2= 'Categoria no existe'
+        e.cat = 'Categoria Invalida'
+    } else if (await sql.selectCategoriaById(cat).length === 0) {
+        e.cat = 'Categoria no existe'
     }
 
     // Verificamos que no hayan errores
-    if (Object.keys(e.cat).length > 0) {
+    if (Object.keys(e).length > 0) {
         return e;
     } else {
         return true;

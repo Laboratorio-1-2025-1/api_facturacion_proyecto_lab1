@@ -4,6 +4,23 @@ const sqlItems = require('../models/modelsItem');
 const controllerCat = require('../controllers/controllerCategorias')
 const controllerAjustes = require('../controllers/controllerAjustePrecio')
 
+/** Busca un producto por su id
+ * @param {number} productId
+ * @returns {} Un producto por su id
+ * @description Busca un producto por su id y lo devuelve con los detalles de su item
+ */
+async function getProduct_Logica(productId) {
+    try {
+        const product = await sqlPr.selectProducto_ById_joinItems(productId);
+        if (product?.length > 0){
+            product[0].ajustesPrecio = await controllerAjustes.getAjustesByItem(product[0].item_id)
+        }
+        return product[0]
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
 /** GET /api/products
  * @returns Todos los productos
  * @descripcion Busca todos los productos
@@ -27,8 +44,8 @@ exports.getAllProducts = async (req, res) => {
 exports.getProductById = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     try {
-        const result = await sqlPr.selectProducto_ById_joinItems(id);
-        res.json(result[0]);
+        result = await getProduct_Logica(id)
+        res.json(result);
     } catch (error) {
         console.error(error.message);
     }
@@ -114,17 +131,17 @@ exports.createProduct = async (req, res) => {
     }
 }
 
-/** PUT /api/products/modify/:id
- * @param {{item:{nombre:string, descripcion:string, categoria_id:number}, idsAjustesPrecios:number[], stock:number, precio:number, coste:number}} req
+/** PUT /api/products/:id
+ * @param {nombre:string, descripcion:string, categoria_id:number, idsAjustesPrecios:number[], stock:number, precio:number, coste:number} req
  * @returns Producto Modificado
  * @descripcion Modifica un producto
 */
 
 exports.updateProduct = async (req, res) => {
     const idProduct = parseInt(req.params.id, 10);
-    const oldProduct = await this.getProductById(idProduct)
+    const oldProduct = await getProduct_Logica(idProduct)
     
-    let { item, idsAjustesPrecios, stock, precio, coste } = req.body;
+    let { nombre, descripcion, categoria_id, idsAjustesPrecios, stock, precio, coste } = req.body;
 
     try{
         // arreglo para manejar posibles errores de validacion de datos
@@ -132,19 +149,19 @@ exports.updateProduct = async (req, res) => {
 
         // Validamos formato del item
 
-        if (item.nombre === undefined){
-            item.nombre = oldProduct.item_nombre
+        if (!nombre){
+            nombre = oldProduct.nombre
         }
-
-        if (item.descripcion === undefined){
-            item.descripcion = oldProduct.item_descripcion
+        
+        if (!descripcion){
+            descripcion = oldProduct.descripcion
         }
-
+        
         // validamos la categoria
-        if (item.categoria_id === undefined){
-            item.categoria_id = oldProduct.categoria_id
-        } else if (item.categoria_id != oldProduct.categoria_id){
-            const c = await controllerCat.validateCategoria(item.categoria_id)
+        if (!categoria_id){
+            categoria_id = oldProduct.categoria_id
+        } else if (categoria_id != oldProduct.categoria_id){
+            const c = await controllerCat.validateCategoria(categoria_id)
             if (c !== true){
                 errores.push(c)
             }
@@ -152,20 +169,20 @@ exports.updateProduct = async (req, res) => {
 
         // Validar stock ingresado
         if(stock === undefined){
-            stock = oldProduct.producto_stock
+            stock = oldProduct.stock
         } else if (isNaN(stock) || stock < 0){
             errores.push({ msg: 'stock invalido' });
         }
 
         // Validar formato de los precios
         if(precio === undefined){
-            precio = oldProduct.producto_precio
+            precio = oldProduct.precio
         }else if (isNaN(precio) || precio < 0){
             errores.push({ msg: 'Precio debe ser numeros validos' });
         }
         
         if(coste === undefined){
-            coste = oldProduct.producto_coste
+            coste = oldProduct.coste
         }else if (isNaN(coste) || coste < 0) {
             errores.push({ msg: 'Coste debe ser numeros validos' });
         }
@@ -188,9 +205,9 @@ exports.updateProduct = async (req, res) => {
         // Creamos el item
         const i = {
             id : oldProduct.item_id,
-            nombre: item.nombre,
-            descripcion: item.descripcion,
-            categoria_id: parseInt(item.categoria_id, 10),
+            nombre: nombre,
+            descripcion: descripcion,
+            categoria_id: parseInt(categoria_id, 10),
             tipo: 'PRODUCTO',
             estado: 1
         }
