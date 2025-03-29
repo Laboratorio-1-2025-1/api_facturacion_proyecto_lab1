@@ -20,6 +20,10 @@ ITEM{
 import db from '../utils/db.js';
 import { selectCategoriaById } from './modelsCategoria.js';
 
+/**
+ * Busca todos los items
+ * @returns Todos los items
+ */
 export const selectAllItems = async () => {
     const connect = await db.connect();
     let sql = 'SELECT * FROM item';
@@ -34,7 +38,12 @@ export const selectAllItems = async () => {
     }
 }
 
-// requiere un id de item
+/**
+ * Busca un item por su id
+ * @param {number} id
+ * @returns Todos los items con el id dado
+ */
+
 export const selectItemById = async (id) => {
     const connect = await db.connect();
     let sql = 'SELECT * FROM item WHERE id = $1';
@@ -49,7 +58,11 @@ export const selectItemById = async (id) => {
     }
 }
 
-// requiere un id de categoria
+/**
+ * requiere un id de categoria
+ * @param {number} id
+ * @returns Todos los items con la categoria dada
+ */
 export const selectItemByCategoriaId = async (id) => {
     const connect = await db.connect();
     let sql = 'SELECT * FROM item WHERE categoria_id = $1';
@@ -64,7 +77,11 @@ export const selectItemByCategoriaId = async (id) => {
     }
 }
 
-// requiere un tipo de item
+/**
+ * requiere un tipo
+ * @param {number} tipo
+ * @returns Todos los items con el tipo dado
+ */
 export const selectItemByTipo = async (tipo) => {
     const connect = await db.connect();
     let sql = 'SELECT * FROM item WHERE tipo = $1';
@@ -79,7 +96,11 @@ export const selectItemByTipo = async (tipo) => {
     }
 }
 
-// requiere un nombre de item
+/**
+ * requiere un id de categoria y un tipo
+ * @param {string} nombre
+ * @returns Todos los items con el nombre dado
+ */
 export const selectItemByNombre = async (nombre) => {
     const connect = await db.connect();
     let sql = 'SELECT * FROM item WHERE nombre = $1';
@@ -94,7 +115,13 @@ export const selectItemByNombre = async (nombre) => {
     }
 }
 
-// requiere un nombre de item y una categoria
+/**
+ * requiere un nombre de item y una categoria
+ * @param {string} nombre
+ * @param {number} categoria
+ * @returns Todos los items con el nombre y categoria dado
+ */
+
 export const selectItemByNombreCategoria = async (nombre, categoria) => {
     const connect = await db.connect();
     let sql = 'SELECT * FROM item WHERE nombre = $1 AND categoria_id = $2';
@@ -109,7 +136,13 @@ export const selectItemByNombreCategoria = async (nombre, categoria) => {
     }
 }
 
-// requiere un nombre de item y un tipo
+/**
+ * requiere un nombre de item y un tipo
+ * @param {string} nombre
+ * @param {number} tipo
+ * @returns Todos los items con el nombre y tipo dado
+ */
+
 export const selectItemByNombreTipo = async (nombre, tipo) => {
     const connect = await db.connect();
     let sql = 'SELECT * FROM item WHERE nombre = $1 AND tipo = $2';
@@ -124,7 +157,14 @@ export const selectItemByNombreTipo = async (nombre, tipo) => {
     }
 }
 
-// requiere un nombre de item, una categoria y un tipo
+/**
+ * requiere un nombre de item, una categoria y un tipo
+ * @param {string} nombre
+ * @param {number} categoria
+ * @param {number} tipo
+ * @returns Todos los items con el nombre, categoria y tipo dado
+ */
+
 export const selectItemByNombreCategoriaTipo = async (nombre, categoria, tipo) => {
     const connect = await db.connect();
     let sql = 'SELECT * FROM item WHERE nombre = $1 AND categoria_id = $2 AND tipo = $3';
@@ -139,12 +179,18 @@ export const selectItemByNombreCategoriaTipo = async (nombre, categoria, tipo) =
     }
 }
 
-// requiere un objeto i:{nombre, descripcion, categoria_id, tipo}
+/**
+ * Crea un item
+ * @param {{nombre:string,
+ * descripcion:string,
+ * categoria_id:number,
+ * tipo:string}} i
+ * @returns El item creado
+ */
 export const insertItem = async (i) => {
     const categoria = await selectCategoriaById(i.categoria_id);
     if(categoria.length === 0){
-        console.error('Categoria no encontrada');
-        return;
+        throw new Error('Categoria no encontrada');
     }
     const connect = await db.connect();
     let sql = 'INSERT INTO item (nombre, descripcion, categoria_id, tipo, estado) VALUES ($1, $2, $3, $4, $5) RETURNING *';
@@ -153,13 +199,23 @@ export const insertItem = async (i) => {
         console.log('Item creado');
         return result.rows;
     } catch (error) {
-        console.error(error.message);
+        throw new Error(`Error al crear el item: ${error.message}`);
     } finally {
         if(connect){ connect.release(); }
     }
 }
 
-// requiere un objeto i:{id, nombre, descripcion, categoria_id, tipo, estado}
+/**
+ * Actualiza un item
+ * @param {{id:number, 
+ * nombre:string, 
+ * descripcion:string, 
+ * categoria_id:number, 
+ * tipo:number, 
+ * estado:[1,2]}} i
+ * @returns El item actualizado
+ * 
+ */
 export const updateItem = async (i) => {
     const itemAux = await selectItemById(i.id);
     if(itemAux.length === 0){
@@ -191,7 +247,12 @@ export const updateItem = async (i) => {
     }
 }
 
-// requiere un id de item
+/**
+ * Elimina un item
+ * @param {number} id 
+ * @returns El item eliminado
+ */
+
 export const deleteItem = async (id) => {
     const connect = await db.connect();
     let sql = 'UPDATE item SET estado = $1 WHERE id = $2 RETURNING *';
