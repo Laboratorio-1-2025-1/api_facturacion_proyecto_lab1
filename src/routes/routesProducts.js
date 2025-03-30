@@ -11,4 +11,7 @@ routes.get('/:id', controller.getProductById);
 // POST /api/products/new
 routes.post('/new', controller.createProduct);
 
+// PUT /api/products/:id
+routes.put('/:id', controller.updateProduct)
+
 module.exports = routes;

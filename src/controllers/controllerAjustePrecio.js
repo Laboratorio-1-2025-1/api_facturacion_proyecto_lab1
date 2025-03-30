@@ -35,6 +35,22 @@ exports.getAjustePrecioById = async (req, res) => {
     }
 }
 
+/** Busca todos los ajustes de precio del item especificado
+ * @param {number} item_id  
+ * @returns {Array} Todos los ajustes, con detalles, del item
+ */
+exports.getAjustesByItem = async (item_id) => {
+    const item = parseInt(item_id, 10)
+    try {
+        const result = await sqlItemAjuste.selectItemAjuste_byItem_joinAjustePrecio(item)
+        return result
+        
+    } catch (error) {
+        console.error(error.message);
+        return null
+    }
+}
+
 // POST /api/ajusteprecio
 exports.createAjustePrecio = async (req, res) => {
     const { descripcion, aplicable_a, tipo, valor } = req.body;
@@ -94,7 +110,7 @@ exports.validarAjustesPrecio = async (ids) =>{
             if (isNaN(id) || id <= 0) {
                 e.ajust.msg1.push(`Ajuste de precio ${id} inválido`);
             } else {
-                const ajuste = await sqlAjusteP.selectAjustePrecioById(parseInt(id, 10));
+                const ajuste = await sql.selectAjustePrecioById(parseInt(id, 10));
                 if (ajuste.length === 0) {
                     e.ajust.msg2.push(`Ajuste de precio ${id} no existe`);
                 }
