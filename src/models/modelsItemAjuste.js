@@ -1,5 +1,3 @@
-import { Pool } from 'pg';
-
 /*
 relaciona los ajustes de precio con con los items
 cada item tiene varios ajustes de precio
