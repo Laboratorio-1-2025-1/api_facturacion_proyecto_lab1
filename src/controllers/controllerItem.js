@@ -19,7 +19,11 @@ exports.getAllItems = async (req, res) => {
     }
 }
 
-// GET /api/items/:id
+/** GET /api/items/:id
+ * Obtiene el item por el id dado
+ * @param {number} id
+ * @returns {Object} El item buscado
+ */
 exports.getItemById = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     try {
