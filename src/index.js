@@ -13,6 +13,7 @@ app.use('/api/categorias', routes.categorias);
 app.use('/api/ajusteprecio', routes.ajusteprecio);
 app.use('/api/items', routes.items);
 app.use('/api/products', routes.productos);
+app.use('/api/cliente', routes.cliente);
 
 app.get('/', async (req, res) => {
     try {

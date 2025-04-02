@@ -1,4 +1,7 @@
-import db from "../utils/db";
+import db from '../utils/db.js';
+//const db = require('../utils/db');
+
+
 
 /**
  * Busca a todos los clientes
@@ -6,7 +9,7 @@ import db from "../utils/db";
  */
 
 export const selectAllCliente = async () => {
-    const connet = db.connet();
+    const connect = await db.connect();
     let sql = 'SELECT * FROM cliente';
     try {
         const result = await connect.query(sql);
@@ -47,9 +50,9 @@ export const selectClienteById = async (id)  => {
 
 export const insertCliente = async (cli) => {
     const connect = await db.connect();
-    let sql = 'INSERT INTO cliente (dni, razon_social, estado) VALUE ($1, $2, $3) RETURNING *';
+    let sql = 'INSERT INTO cliente (dni, razon_social, estado) VALUES ($1, $2, $3) RETURNING *';
     try {
-        const result = await connect.query(sql, [cli.dni, cli.razon_social, '1']);
+        const result = await connect.query(sql, [cli.dni, cli.razon_social, 'ACTIVO']);
         console.log('Cliente creado exitosamente');
         return result.rows;
     } catch (error) {

@@ -3,7 +3,9 @@ const sql = require('../models/modelsCliente');
 // GET /api/cliente
 exports.getAllCliente = async (req, res) => {
     try {
+        console.log('Iniciando consulta...');
         const result = await sql.selectAllCliente();
+        console.log('Resultados Obtenidos:', result);
         res.json(result);
     } catch (error) {
         console.error(error.message);
@@ -12,7 +14,7 @@ exports.getAllCliente = async (req, res) => {
 }
 
 // GET /api/cliente/:id
-exports.getCLienteById = async (req, res) => {
+exports.getClienteById = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     try {
         const result = await sql.selectClienteById(id);
@@ -26,6 +28,7 @@ exports.getCLienteById = async (req, res) => {
 // POST /api/clientes 
 exports.createCliente = async (req, res) => {
     const { dni, razon_social } = req.body;
+    console.log('Datos recibidos:', { dni, razon_social });
     if (!dni || !razon_social) {
         return res.status(400).json({ msg: 'dni y razon social son necesarios' });
     }

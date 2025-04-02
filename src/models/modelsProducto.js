@@ -16,6 +16,9 @@ PRODUCTOS{
 import db from '../utils/db.js';
 import { selectItemById } from './modelsItem.js';
 
+//const db = require('../utils/db');
+//const { selectItemById } = require('./modelsItem');
+
 /**
  * Busca todos los productos
  * @returns Todos los productos

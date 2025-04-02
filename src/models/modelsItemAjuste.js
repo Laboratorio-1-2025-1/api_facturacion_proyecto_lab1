@@ -12,6 +12,8 @@ ITEM_AJUSTE{
 */
 
 import db from '../utils/db.js';
+//const db = require('../utils/db');
+
 
 /**
  * Busca todos los item_ajuste
