@@ -12,7 +12,7 @@ CATEGORIA {
 */
 
 import db from '../utils/db.js';
-//const db = require('../utils/db');
+
 
 /**
  * Busca todas las categorias
