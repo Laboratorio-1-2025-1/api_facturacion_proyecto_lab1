@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/controllersDireccion'); 
+const controller = require('../controllers/controllerDireccion'); 
 
 // Obtener todas las direcciones
 router.get('/', controller.getAllDirecciones);
