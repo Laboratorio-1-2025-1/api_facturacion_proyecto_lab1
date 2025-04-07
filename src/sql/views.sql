@@ -114,3 +114,4 @@ JOIN
     ITEM i ON s.ITEM_ID = i.ID
 JOIN
     CATEGORIA c ON i.CATEGORIA_ID = c.ID;
+

@@ -43,6 +43,25 @@ export const selectClienteById = async (id)  => {
 }
 
 /**
+ * Busca un cliente por su dni
+ * @param {number} dni
+ * @returns al cliente que tenga el dni solicitado
+ */
+export const selectCliente_ByDni = async (dni)  => {
+    const connect = await db.connect();
+    let sql = 'SELECT * FROM  cliente WHERE dni = $1';
+    try {
+        const result = await connect.query(sql, [dni]);
+        console.log('Resultados Encontrados');
+        return result.rows;
+    } catch (error) {
+        console.error(error.message);
+    } finally {
+        if(connect){connect.release(); }
+    }
+}
+
+/**
  * Para hacer incersiones en la tabla cliente
  * @param {{dni:number, razon_social:string}} cli
  * @returns nuevos clientes registrados
@@ -53,15 +72,9 @@ export const insertCliente = async (cli) => {
     let sql = 'INSERT INTO cliente (dni, razon_social, estado) VALUES ($1, $2, $3) RETURNING *';
     try {
         const result = await connect.query(sql, [cli.dni, cli.razon_social, '1']);
-        console.log('Cliente creado exitosamente');
-        console.log('Resultado de la base de datos:', result.rows[0]);
+        console.log('Resultado de la base de datos:', result.rows);
 
-        const estadoMapeado = result.rows[0].estado === '1' ? 'ACTIVO' : 
-        result.rows[0].estado === '2' ? 'INACTIVO' : 'desconocido';
-        console.log('Estado mapeado:', estadoMapeado); 
-        return { ...result.rows[0], estado: estadoMapeado };
-
-        //return result.rows;
+        return result.rows;
     } catch (error) {
         console.error(error.message);
     } finally {
@@ -91,7 +104,7 @@ export const updateCliente = async (cli) => {
     const connect = await db.connect();
     let sql = 'UPDATE cliente SET dni = $1, razon_social = $2, estado = $3 WHERE id = $4 RETURNING *';
     try {
-        const result = await connect.query(sql, [cli.dni, cli.razon_social, cli.estado]);
+        const result = await connect.query(sql, [cli.dni, cli.razon_social, cli.estado, cli.id]);
         console.log('Cliente Actualizado');
         return result.rows;
     } catch (error) {

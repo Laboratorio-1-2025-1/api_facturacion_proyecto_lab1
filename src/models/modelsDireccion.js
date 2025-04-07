@@ -59,6 +59,18 @@ export const insertDireccion = async (d) => {
 };
 
 export const updateDireccion = async (id, d) => {
+    const dirAux = await selectDireccionById(id);
+    if (!dirAux) {
+        throw new Error('Dirección no encontrada');
+    } else {
+        d.pais = d.pais || dirAux.pais;
+        d.estado = d.estado || dirAux.estado;
+        d.municipio = d.municipio || dirAux.municipio;
+        d.parroquia = d.parroquia || dirAux.parroquia;
+        d.sector = d.sector || dirAux.sector;
+        d.calle = d.calle || dirAux.calle;
+        d.casa = d.casa || dirAux.casa;
+    }
     const connect = await db.connect();
     let sql = 'UPDATE direccion SET pais = $1, estado = $2, municipio = $3, parroquia = $4, sector = $5, calle = $6, casa = $7 WHERE id = $8 RETURNING *';
     try {

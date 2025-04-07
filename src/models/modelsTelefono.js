@@ -25,7 +25,7 @@ export const selectAllTelefono = async () => {
  */
 export const selectTelefonoById = async (id) => {
     const connect = await db.connect();
-    let sql = 'SELECT * FROM telefono WHERE pk_id = $1'; // Usamos pk_id como ID
+    let sql = 'SELECT * FROM telefono WHERE id = $1';
     try {
         const result = await connect.query(sql, [id]);
         console.log('Resultados encontrados (teléfono por ID)');
@@ -44,7 +44,7 @@ export const selectTelefonoById = async (id) => {
  */
 export const insertTelefono = async (tel) => {
     const connect = await db.connect();
-    let sql = 'INSERT INTO telefono (cliente, pais, operadora, numero, estado) VALUES ($1, $2, $3, $4, $5) RETURNING *';
+    let sql = 'INSERT INTO telefono (CLIENTE_ID, pais, operadora, numero, estado) VALUES ($1, $2, $3, $4, $5) RETURNING *';
     try {
         const result = await connect.query(sql, [tel.cliente, tel.pais, tel.operadora, tel.numero, '1']); // Estado '1' por defecto (activo)
         console.log('Teléfono creado exitosamente');
@@ -69,7 +69,7 @@ export const updateTelefono = async (tel) => {
         return;
     } else {
         // Actualiza los datos si se proporcionan, o mantiene los existentes
-        tel.cliente = tel.cliente || telefonoAux[0].cliente;
+        tel.cliente = tel.cliente || telefonoAux[0].cliente_id;
         tel.pais = tel.pais || telefonoAux[0].pais;
         tel.operadora = tel.operadora || telefonoAux[0].operadora;
         tel.numero = tel.numero || telefonoAux[0].numero;
@@ -78,7 +78,7 @@ export const updateTelefono = async (tel) => {
 
     // Actualiza el teléfono
     const connect = await db.connect();
-    let sql = 'UPDATE telefono SET cliente = $1, pais = $2, operadora = $3, numero = $4, estado = $5 WHERE pk_id = $6 RETURNING *';
+    let sql = 'UPDATE telefono SET cliente_id = $1, pais = $2, operadora = $3, numero = $4, estado = $5 WHERE id = $6 RETURNING *';
     try {
         const result = await connect.query(sql, [tel.cliente, tel.pais, tel.operadora, tel.numero, tel.estado, tel.pk_id]);
         console.log('Teléfono actualizado');
