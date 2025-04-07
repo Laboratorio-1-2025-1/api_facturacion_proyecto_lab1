@@ -7,6 +7,9 @@ const direccion = require('./routesDireccion');
 const clienteDireccion = require('./routesClienteDireccion');
 const telefono = require('./routesTelefono');
 const correo = require('./routesCorreo');
+const ordenes = require('./routesOrdenes');
+const detallesOrden = require('./routesDetallesOrden');
+const facturas = require('./routesFacturas');
 
 module.exports = {
     categorias,
@@ -17,5 +20,8 @@ module.exports = {
     direccion,
     clienteDireccion,
     telefono,
-    correo
+    correo,
+    ordenes,
+    detallesOrden,
+    facturas
 }
