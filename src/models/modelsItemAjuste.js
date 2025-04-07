@@ -1,5 +1,3 @@
-import { Pool } from 'pg';
-
 /*
 relaciona los ajustes de precio con con los items
 cada item tiene varios ajustes de precio
@@ -14,6 +12,8 @@ ITEM_AJUSTE{
 */
 
 import db from '../utils/db.js';
+//const db = require('../utils/db');
+
 
 /**
  * Busca todos los item_ajuste

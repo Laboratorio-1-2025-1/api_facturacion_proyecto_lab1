@@ -20,6 +20,9 @@ ITEM{
 import db from '../utils/db.js';
 import { selectCategoriaById } from './modelsCategoria.js';
 
+//const db = require('../utils/db');
+//const { selectCategoriaById } = require('./modelsCategoria');
+
 /**
  * Busca todos los items
  * @returns Todos los items

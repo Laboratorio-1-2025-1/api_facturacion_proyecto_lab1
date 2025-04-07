@@ -13,6 +13,7 @@ CATEGORIA {
 
 import db from '../utils/db.js';
 
+
 /**
  * Busca todas las categorias
  * @returns Todas las categorias
