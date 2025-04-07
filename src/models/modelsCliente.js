@@ -52,9 +52,16 @@ export const insertCliente = async (cli) => {
     const connect = await db.connect();
     let sql = 'INSERT INTO cliente (dni, razon_social, estado) VALUES ($1, $2, $3) RETURNING *';
     try {
-        const result = await connect.query(sql, [cli.dni, cli.razon_social, 'ACTIVO']);
+        const result = await connect.query(sql, [cli.dni, cli.razon_social, '1']);
         console.log('Cliente creado exitosamente');
-        return result.rows;
+        console.log('Resultado de la base de datos:', result.rows[0]);
+
+        const estadoMapeado = result.rows[0].estado === '1' ? 'ACTIVO' : 
+        result.rows[0].estado === '2' ? 'INACTIVO' : 'desconocido';
+        console.log('Estado mapeado:', estadoMapeado); 
+        return { ...result.rows[0], estado: estadoMapeado };
+
+        //return result.rows;
     } catch (error) {
         console.error(error.message);
     } finally {
