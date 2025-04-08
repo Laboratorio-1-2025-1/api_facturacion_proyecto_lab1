@@ -1,3 +1,7 @@
+
+- Arnaldo Flores - 27.747.762
+- Carani Rodriguez - 27.025..088
+
 # api_facturacion_proyecto_lab1
 la base de datos se ejecuta en un contenedor docker, necesaria la aplicacion docker destokp
 
