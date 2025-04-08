@@ -4,6 +4,10 @@ const sql = require('../models/modelsOrden');
 exports.getAllOrdenes = async (req, res) => {
     try {
         const result = await sql.selectAllOrdenes();
+        result.forEach(orden => {
+            orden.fecha = orden.fecha.toISOString().split('T')[0]; // Formatear la fecha
+        });
+
         res.json(result);
     } catch (error) {
         console.error(error.message);
@@ -19,6 +23,8 @@ exports.getOrdenById = async (req, res) => {
         if (!result) {
             return res.status(404).json({ msg: 'Orden no encontrada' });
         }
+        result.fecha = result.fecha.toISOString().split('T')[0]; // Formatear la fecha
+
         res.json(result);
     } catch (error) {
         console.error(error.message);
@@ -28,14 +34,16 @@ exports.getOrdenById = async (req, res) => {
 
 // POST /api/ordenes
 exports.createOrden = async (req, res) => {
-    const { cliente_id, fecha, estado } = req.body;
-    if (!cliente_id || !fecha || !estado) {
-        return res.status(400).json({ msg: 'cliente_id, fecha y estado son necesarios' });
+    const { cliente_id } = req.body;
+    if (!cliente_id) {
+        return res.status(400).json({ msg: 'cliente_id es necesario' });
     }
-    const orden = { cliente_id, fecha, estado };
+    const orden = { cliente_id, fecha: new Date(), estado: 'ACTIVO' };
 
     try {
+        console.log('Datos de la orden: ', orden);
         const result = await sql.insertOrden(orden);
+        result.fecha = result.fecha.toISOString().split('T')[0]; // Formatear la fecha
         res.json(result);
     } catch (error) {
         console.error(error.message);
@@ -50,6 +58,7 @@ exports.updateOrden = async (req, res) => {
     const orden = { id, cliente_id, fecha, estado };
 
     try {
+        console.log('Datos de la orden: ' + orden);
         const result = await sql.updateOrden(orden);
         if (!result) {
             return res.status(404).json({ msg: 'Orden no encontrada' });

@@ -26,6 +26,20 @@ export const selectCorreoById = async (id) => {
     }
 };
 
+export const selectCorreoByClienteId = async (clienteId) => {
+    const connect = await db.connect();
+    let sql = 'SELECT * FROM correo WHERE cliente_id = $1';
+    try {
+        const result = await connect.query(sql, [clienteId]
+        );
+        return result.rows;
+    } catch (error) {
+        console.error(error.message);
+    } finally {
+        if (connect) { connect.release(); }
+    }
+};
+
 export const insertCorreo = async (correo) => {
     const connect = await db.connect();
     let sql = 'INSERT INTO correo (cliente_id, descripcion, dominio, estado) VALUES ($1, $2, $3, $4) RETURNING *';

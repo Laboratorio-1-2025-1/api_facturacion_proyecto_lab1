@@ -68,6 +68,16 @@ export const insertFactura = async (factura) => {
  * @returns La factura actualizada
  */
 export const updateFactura = async (factura) => {
+    const facturaAux = await selectFacturaById(factura.id);
+    if (!facturaAux) {
+        return null; // No se encontró la factura a actualizar
+    }
+    factura.orden_id = factura.orden_id || facturaAux.orden_id;
+    factura.serie = factura.serie || facturaAux.serie;
+    factura.numero = factura.numero || facturaAux.numero;
+    factura.fecha = factura.fecha || facturaAux.fecha;
+    factura.estado = factura.estado || facturaAux.estado;
+    
     const connect = await db.connect();
     let sql = 'UPDATE factura SET orden_id = $1, serie = $2, numero = $3, fecha = $4, estado = $5 WHERE id = $6 RETURNING *';
     try {

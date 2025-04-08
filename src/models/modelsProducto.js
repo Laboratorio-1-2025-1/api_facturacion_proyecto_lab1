@@ -242,3 +242,23 @@ export const selectProducto_ById_joinItems = async (id) => {
         if(connect){ connect.release(); }
     }
 }
+
+/**
+ * Actualizamos el stock, filtrando por el item_id
+ * @param {number} item_id
+ * @param {number} stock
+ * @returns El producto actualizado
+ */
+export const updateStock = async (item_id, stock) => {
+    const connect = await db.connect();
+    let sql = 'UPDATE productos SET stock = $1 WHERE item_id = $2 RETURNING *';
+    try {
+        const result = await connect.query(sql, [stock, item_id]);
+        console.log('Producto actualizado');
+        return result.rows;
+    } catch (error) {
+        console.error(error.message);
+    } finally {
+        if(connect){ connect.release(); }
+    }
+}

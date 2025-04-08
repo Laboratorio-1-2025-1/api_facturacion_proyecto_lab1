@@ -18,6 +18,20 @@ export const selectAllDetallesOrden = async () => {
     }
 };
 
+export const selectDetalleById = async (id) => {
+    const connect = await db.connect();
+    let sql = 'SELECT * FROM detalles_orden WHERE id = $1';
+    try {
+        const result = await connect.query(sql, [id]);
+        console.log('Detalle de orden encontrado');
+        return result.rows[0];
+    } catch (error) {
+        console.error(error.message);
+    } finally {
+        if (connect) { connect.release(); }
+    }
+}
+
 /**
  * Busca los detalles de una orden por su ID
  * @param {number} ordenId
@@ -69,6 +83,18 @@ export const insertDetalleOrden = async (detalle) => {
  * @returns El detalle de orden actualizado
  */
 export const updateDetalleOrden = async (detalle) => {
+    const detalleAux = await selectDetalleById(detalle.id);
+    if (!detalleAux) {
+        console.error('Detalle de orden no encontrado');
+        return null;
+    } else {
+        detalle.orden_id = detalle.orden_id || detalleAux.orden_id;
+        detalle.item_id = detalle.item_id || detalleAux.item_id;
+        detalle.cantidad = detalle.cantidad || detalleAux.cantidad;
+        detalle.subtotal = detalle.subtotal || detalleAux.subtotal;
+        detalle.impuesto_aplicado = detalle.impuesto_aplicado || detalleAux.impuesto_aplicado;
+        detalle.descuento_aplicado = detalle.descuento_aplicado || detalleAux.descuento_aplicado;
+    }
     const connect = await db.connect();
     let sql = 'UPDATE detalles_orden SET orden_id = $1, item_id = $2, cantidad = $3, subtotal = $4, impuesto_aplicado = $5, descuento_aplicado = $6 WHERE id = $7 RETURNING *';
     try {
