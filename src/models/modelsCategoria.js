@@ -13,6 +13,12 @@ CATEGORIA {
 
 import db from '../utils/db.js';
 
+
+/**
+ * Busca todas las categorias
+ * @returns Todas las categorias
+ */
+
 export const selectAllCategorias = async () => {
     const connect = await db.connect();
     let sql = 'SELECT * FROM categoria';
@@ -27,7 +33,12 @@ export const selectAllCategorias = async () => {
     }
 }
 
-// requiere un id de categoria
+/**
+ * Busca una categoria por su id
+ * @param {number} id 
+ * @returns Todas las categorias con el id dado
+ */
+
 export const selectCategoriaById = async (id) => {
     const connect = await db.connect();
     let sql = 'SELECT * FROM categoria WHERE id = $1';
@@ -42,7 +53,12 @@ export const selectCategoriaById = async (id) => {
     }
 }
 
-// requiere un objeto c:{descripcion, tipo}
+/**
+ * Busca una categoria por su tipo
+ * @param {{descripcion:string, tipo:string}} c 
+ * @returns Todas las categorias con el tipo dado
+ */
+
 export const insertCategoria = async (c) => {
     const connect = await db.connect();
     let sql = 'INSERT INTO categoria (descripcion, tipo, estado) VALUES ($1, $2, $3) RETURNING *';
@@ -57,12 +73,18 @@ export const insertCategoria = async (c) => {
     }
 }
 
-// requiere un objeto c:{id, descripcion, tipo, estado}
+/**
+ * Actualiza una categoria
+ * @param {{id:number, descripcion:string, tipo:string, estado:[1,2]}} c 
+ * @returns La categoria actualizada
+ */
+
 export const updateCategoria = async (c) => {
     // se verifica que la categoria exista
     const categoriaAux = await selectCategoriaById(c.id);
     if(categoriaAux.length === 0){
-        return 'Categoria no encontrada';
+        console.log('Categoria no encontrada');
+        return 
     } else {
         // se verifica el objeto categoria para que no se pierdan los datos
         c.descripcion = c.descripcion || categoriaAux[0].descripcion;
@@ -84,12 +106,18 @@ export const updateCategoria = async (c) => {
     }
 }
 
-// requiere un id de categoria
+/**
+ * Elimina una categoria
+ * @param {number} id 
+ * @returns La categoria eliminada
+ */
+
 export const deleteCategoria = async (id) => {
     // se verifica que la categoria exista
     const categoriaAux = await selectCategoriaById(id);
     if(categoriaAux.length === 0){
-        return 'Categoria no encontrada';
+        console.log('Categoria no encontrada');
+        return 
     }
 
     // se elimina la categoria

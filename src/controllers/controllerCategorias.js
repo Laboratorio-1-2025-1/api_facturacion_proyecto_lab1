@@ -67,3 +67,27 @@ exports.deleteCategoria = async (req, res) => {
         res.status(500).json({ msg: 'Error al realizar la operacion' });
     }
 }
+
+/**
+ * Validar categoria
+ * @param {int} cat 
+ * @returns 
+ */
+exports.validateCategoria = async (cat) => {
+    cat = parseInt(cat, 10);
+    let e = {}
+
+    // Validamos formato de categoria_id
+    if (isNaN(cat) || cat <= 0) {
+        e.cat = 'Categoria Invalida'
+    } else if (await sql.selectCategoriaById(cat).length === 0) {
+        e.cat = 'Categoria no existe'
+    }
+
+    // Verificamos que no hayan errores
+    if (Object.keys(e).length > 0) {
+        return e;
+    } else {
+        return true;
+    }
+}
